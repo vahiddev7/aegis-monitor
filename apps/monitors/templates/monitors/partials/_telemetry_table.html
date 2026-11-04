@@ -1,0 +1,54 @@
+<div class="bg-cardBg border border-borderBg rounded-xl overflow-hidden shadow-sm">
+    <div class="px-6 py-4 border-b border-borderBg flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-slate-200">Recent Health Check Telemetry</h3>
+        <span class="text-xs text-slate-400">Latest 20 probes</span>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-800/50 text-slate-400 uppercase text-[10px] tracking-wider border-b border-borderBg">
+                <tr>
+                    <th class="px-6 py-3">Timestamp</th>
+                    <th class="px-6 py-3">Endpoint Target</th>
+                    <th class="px-6 py-3">Status Code</th>
+                    <th class="px-6 py-3">Latency</th>
+                    <th class="px-6 py-3">Outcome</th>
+                    <th class="px-6 py-3">Diagnostics</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/60 font-mono">
+                {% for log in recent_logs %}
+                <tr class="hover:bg-slate-800/30 transition">
+                    <td class="px-6 py-3 text-slate-400">{{ log.created_at|date:"H:i:s d-m-Y" }}</td>
+                    <td class="px-6 py-3 font-semibold text-white font-sans">{{ log.monitor.name }}</td>
+                    <td class="px-6 py-3">
+                        {% if log.status_code %}
+                            <span class="{% if log.is_up %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                                {{ log.status_code }}
+                            </span>
+                        {% else %}
+                            <span class="text-slate-500">—</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-3 text-slate-300">
+                        {% if log.response_time_ms %}{{ log.response_time_ms }} ms{% else %}—{% endif %}
+                    </td>
+                    <td class="px-6 py-3 font-sans">
+                        {% if log.is_up %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-950 text-emerald-400 border border-emerald-800/50">UP</span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-rose-950 text-rose-400 border border-rose-800/50">DOWN</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-3 text-slate-400 truncate max-w-xs font-sans">
+                        {{ log.error_message|default:"Success" }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="px-6 py-8 text-center text-slate-500 font-sans">No telemetry records recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+    <div class="bg-cardBg border border-borderBg rounded-xl p-5 shadow-sm">
+        <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Targets</div>
+        <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-3xl font-extrabold text-white">{{ total_monitors }}</span>
+            <span class="text-xs text-slate-400">Endpoints</span>
+        </div>
+    </div>
+
+    <div class="bg-cardBg border border-borderBg rounded-xl p-5 shadow-sm">
+        <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Operational (UP)</div>
+        <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-3xl font-extrabold text-emerald-400">{{ up_count }}</span>
+            <span class="text-xs text-emerald-500/80 font-medium">Healthy</span>
+        </div>
+    </div>
+
+    <div class="bg-cardBg border border-borderBg rounded-xl p-5 shadow-sm">
+        <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Disrupted (DOWN)</div>
+        <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-3xl font-extrabold text-rose-500">{{ down_count }}</span>
+            <span class="text-xs text-rose-400 font-medium">Critical</span>
+        </div>
+    </div>
+
+    <div class="bg-cardBg border border-borderBg rounded-xl p-5 shadow-sm">
+        <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider">System Health</div>
+        <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-3xl font-extrabold text-cyan-400">{{ overall_uptime }}%</span>
+            <span class="text-xs text-cyan-500/80">Average</span>
+        </div>
+    </div>
+</div>

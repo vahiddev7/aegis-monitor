@@ -1,0 +1,82 @@
+<div class="bg-cardBg border border-borderBg rounded-xl p-6 flex flex-col justify-between space-y-4 shadow-sm hover:border-slate-500/80 transition">
+    <div>
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                {% if item.monitor.is_currently_up %}
+                    <span class="flex h-3 w-3 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded">UP</span>
+                {% else %}
+                    <span class="flex h-3 w-3 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                    </span>
+                    <span class="text-xs font-bold text-rose-400 bg-rose-950/60 border border-rose-800/40 px-2 py-0.5 rounded">DOWN</span>
+                {% endif %}
+                <h3 class="text-base font-semibold text-white tracking-tight">{{ item.monitor.name }}</h3>
+            </div>
+            
+            <!-- Actions Toolbar -->
+            <div class="flex items-center space-x-2">
+                <span class="text-xs font-mono px-2 py-1 bg-slate-800 text-slate-300 rounded border border-slate-700/60">{{ item.monitor.http_method }}</span>
+
+                <!-- Action: Run Manual Check -->
+                <form action="{% url 'monitors:monitor-trigger' item.monitor.id %}" method="post" class="inline">
+                    {% csrf_token %}
+                    <button type="submit" title="Run Check Now" class="p-1 hover:bg-slate-700/60 text-slate-400 hover:text-emerald-400 rounded transition text-xs">
+                        ⚡
+                    </button>
+                </form>
+
+                <!-- Action: Edit (Opens Modal) -->
+                <button type="button"
+                        onclick="openEditModal({
+                            id: '{{ item.monitor.id }}',
+                            name: '{{ item.monitor.name|escapejs }}',
+                            url: '{{ item.monitor.url|escapejs }}',
+                            http_method: '{{ item.monitor.http_method }}',
+                            expected_status_code: '{{ item.monitor.expected_status_code }}',
+                            interval_seconds: '{{ item.monitor.interval_seconds }}',
+                            timeout_seconds: '{{ item.monitor.timeout_seconds }}',
+                            is_active: {{ item.monitor.is_active|yesno:'true,false' }}
+                        })"
+                        title="Edit Monitor"
+                        class="p-1 hover:bg-slate-700/60 text-slate-400 hover:text-cyan-400 rounded transition text-xs">
+                    ✏️
+                </button>
+
+                <!-- Action: Delete -->
+                <form action="{% url 'monitors:monitor-delete' item.monitor.id %}" method="post" class="inline" onsubmit="return confirm('Are you sure you want to delete this target?');">
+                    {% csrf_token %}
+                    <button type="submit" title="Delete Monitor" class="p-1 hover:bg-slate-700/60 text-slate-400 hover:text-rose-400 rounded transition text-xs">
+                        🗑️
+                    </button>
+                </form>
+            </div>
+        </div>
+        <p class="mt-2 text-xs text-slate-400 font-mono truncate" title="{{ item.monitor.url }}">{{ item.monitor.url }}</p>
+    </div>
+
+    <!-- Mini Telemetry Metrics -->
+    <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-800 text-center">
+        <div>
+            <div class="text-[11px] text-slate-400">Uptime (24h)</div>
+            <div class="text-sm font-bold text-slate-200 mt-0.5">{{ item.metrics.uptime_percentage }}%</div>
+        </div>
+        <div>
+            <div class="text-[11px] text-slate-400">Avg Latency</div>
+            <div class="text-sm font-bold text-slate-200 mt-0.5">{{ item.metrics.avg_response_time_ms }} ms</div>
+        </div>
+        <div>
+            <div class="text-[11px] text-slate-400">Interval</div>
+            <div class="text-sm font-bold text-slate-200 mt-0.5">{{ item.monitor.interval_seconds }}s</div>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between text-xs text-slate-400">
+        <span>Last check: {{ item.monitor.last_checked_at|date:"H:i:s Y-m-d"|default:"Pending" }}</span>
+        <span class="text-slate-500">Expects: {{ item.monitor.expected_status_code }}</span>
+    </div>
+</div>

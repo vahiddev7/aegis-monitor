@@ -1,0 +1,69 @@
+<!-- Edit Monitor Modal for item.monitor.id -->
+<div id="editModal-{{ item.monitor.id }}" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-cardBg border border-borderBg rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden text-left">
+        <div class="px-6 py-4 border-b border-borderBg flex items-center justify-between">
+            <h3 class="text-base font-semibold text-white flex items-center gap-2">
+                <span>✏️</span> Edit Target: {{ item.monitor.name }}
+            </h3>
+            <button onclick="toggleEditModal('{{ item.monitor.id }}')" class="text-slate-400 hover:text-white text-lg">&times;</button>
+        </div>
+
+        <form action="{% url 'monitors:monitor-update' item.monitor.id %}" method="post" class="p-6 space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Friendly Name</label>
+                <input type="text" name="name" value="{{ item.monitor.name }}" required
+                       class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Target URL</label>
+                <input type="url" name="url" value="{{ item.monitor.url }}" required
+                       class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">HTTP Method</label>
+                    <select name="http_method" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                        <option value="GET" {% if item.monitor.http_method == 'GET' %}selected{% endif %}>GET</option>
+                        <option value="POST" {% if item.monitor.http_method == 'POST' %}selected{% endif %}>POST</option>
+                        <option value="HEAD" {% if item.monitor.http_method == 'HEAD' %}selected{% endif %}>HEAD</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Expected Code</label>
+                    <input type="number" name="expected_status_code" value="{{ item.monitor.expected_status_code }}" min="100" max="599" required
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Interval (Sec)</label>
+                    <input type="number" name="interval_seconds" value="{{ item.monitor.interval_seconds }}" min="30" required
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">Timeout (Sec)</label>
+                    <input type="number" name="timeout_seconds" value="{{ item.monitor.timeout_seconds }}" min="1" max="60" required
+                           class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <label class="inline-flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+                    <input type="checkbox" name="is_active" value="true" {% if item.monitor.is_active %}checked{% endif %}
+                           class="rounded bg-slate-900 border-slate-700 text-emerald-500 focus:ring-0">
+                    <span>Active monitoring enabled</span>
+                </label>
+            </div>
+
+            <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-800">
+                <button type="button" onclick="toggleEditModal('{{ item.monitor.id }}')" class="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white transition">Cancel</button>
+                <button type="submit" class="px-4 py-2 text-xs font-medium bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg transition shadow-md">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>

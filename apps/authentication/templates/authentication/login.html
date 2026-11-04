@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In | Aegis Monitor{% endblock title %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center">
+    <div class="w-full max-w-md bg-cardBg border border-borderBg rounded-2xl p-8 shadow-2xl space-y-6">
+        
+        <!-- Header & Logo -->
+        <div class="text-center space-y-2">
+            <span class="text-4xl block">🛡️</span>
+            <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                Aegis Monitor
+            </h1>
+            <p class="text-xs text-slate-400">Sign in to manage uptime probes and telemetry</p>
+        </div>
+
+        <!-- Login Form Partial -->
+        {% include "authentication/partials/_login_form.html" %}
+
+        <div class="text-center pt-2 border-t border-slate-800">
+            <span class="text-[11px] text-slate-500">Aegis Telemetry Engine &bull; Automated Monitoring</span>
+        </div>
+    </div>
+</div>
+{% endblock content %}

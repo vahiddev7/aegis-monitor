@@ -34,6 +34,7 @@ CACHES = {
 }
 
 INSTALLED_APPS = [
+    "apps.monitors",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -161,3 +162,6 @@ CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://broker:637
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 
+LOGIN_URL = "authentication:login"
+LOGIN_REDIRECT_URL = "monitors:dashboard"
+LOGOUT_REDIRECT_URL = "authentication:login"

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Aegis Monitor{% endblock title %}</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        surfaceBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        borderBg: '#334155'
+                    }
+                }
+            }
+        }
+    </script>
+    {% block extra_head %}{% endblock extra_head %}
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen font-sans antialiased flex flex-col">
+
+    <!-- Global Top Navigation -->
+    <nav class="border-b border-slate-800 bg-surfaceBg/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="{% url 'monitors:dashboard' %}" class="flex items-center space-x-3 group">
+                <span class="text-2xl transition group-hover:scale-110">🛡️</span>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Aegis Monitor</span>
+            </a>
+
+            <!-- Right Controls: Conditionally render user status or auth indicator -->
+            <div class="flex items-center space-x-4">
+                {% if request.user.is_authenticated %}
+                    <span class="text-xs text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/50">Auto-refresh: 30s</span>
+                    
+                    <div class="flex items-center space-x-2 pl-2 border-l border-slate-800">
+                        <div class="h-8 w-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-semibold text-sm border border-emerald-500/30">
+                            {{ request.user.username|slice:":1"|upper|default:"U" }}
+                        </div>
+                        <form action="{% url 'authentication:logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" title="Logout" class="p-1.5 text-slate-400 hover:text-rose-400 transition text-sm">
+                                🚪
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                    <span class="text-xs text-slate-500">Authentication Required</span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Body -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        {% block content %}{% endblock content %}
+    </main>
+
+    <footer class="border-t border-slate-800/80 py-4 text-center text-xs text-slate-500">
+        Aegis Monitor Engine &bull; Automated Health Checks &amp; Alerting
+    </footer>
+
+    {% block extra_js %}{% endblock extra_js %}
+</body>
+</html>
